@@ -6,10 +6,13 @@
 *.swo
 *.swp
 *~
-.coverage
+.coverage*
 .idea
 .testrepository
 .tox
+.stestr*
+.stestr/
+.testr*
 AUTHORS
 build
 ChangeLog
@@ -20,6 +23,8 @@ doc/source/api/
 # Development environment files
 .project
 .pydevproject
+coverage.xml
 cover
 # Files created by releasenotes build
 releasenotes/build
+.vscode/
