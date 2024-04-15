@@ -4,9 +4,8 @@ through Coriolis' endpoints API.
 """
 
 import json
-
 import jsonschema
-from barbicanclient import client as barbican_client
+
 from keystoneauth1.identity import v3
 from keystoneauth1 import session as ksession
 
@@ -104,7 +103,8 @@ def check_mapped_networks_exist(coriolis, destination_endpoint, network_map,
 def check_mapped_storage_exists(coriolis, destination_endpoint,
                                 storage_mappings,
                                 destination_environment=None):
-    """ Checks whether all of the mapped storage types exist on the destination.
+    """ Checks whether all of the mapped storage types exist on the
+    destination.
 
     :param destination_endpoint: destination endpoint object or ID
     :param storage_mappings: storage mappings dict
@@ -117,7 +117,8 @@ def check_mapped_storage_exists(coriolis, destination_endpoint,
     def _check_stor(storage_name_or_id):
         matches = [
             stor for stor in storage
-            if stor.id == storage_name_or_id or stor.name == storage_name_or_id]
+            if (stor.id == storage_name_or_id or
+                stor.name == storage_name_or_id)]
         if not matches:
             raise Exception(
                 "Could not find storage type '%s' in: %s" % (
@@ -130,7 +131,8 @@ def check_mapped_storage_exists(coriolis, destination_endpoint,
         _check_stor(default)
 
     # check backend mappings:
-    for mapped_storage in storage_mappings.get('backend_mappings', {}).values():
+    for mapped_storage in (storage_mappings.get('backend_mappings', {}).
+                           values()):
         _check_stor(mapped_storage)
 
     # check per-disk mappings:
@@ -146,8 +148,8 @@ def get_linux_vms_for_endpoint(coriolis, source_endpoint, source_options=None):
     return [vm for vm in vms if vm.os_type == 'linux']
 
 
-def check_vm_network_mapping(coriolis, source_endpoint, vm_name_or_id, network_map,
-                             source_options=None):
+def check_vm_network_mapping(coriolis, source_endpoint, vm_name_or_id,
+                             network_map, source_options=None):
     """ Fetches detailed info on the given source VM and checks that all of its
     NICs have an appropriate mapping in the given network_map
 
@@ -171,7 +173,6 @@ def main():
         auth=v3.Password(**CORIOLIS_CONNECTION_INFO))
 
     coriolis = coriolis_client.Client(session=session)
-    barbican = barbican_client.Client(session=session)
 
     # fetch and validate options for Azure:
     azure_schema = get_schema_for_plugin(
